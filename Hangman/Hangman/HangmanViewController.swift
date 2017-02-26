@@ -59,26 +59,6 @@ class HangmanViewController: UIViewController {
     var dashesString = ""
     var guess: String! = ""
     
-    //updates incorrect guess list and count, check if 6 incorrect reached
-    func trackIncorrect(){
-        guess = String(describing: self.input.text!)
-        guess = guess.uppercased()
-        lettersGuessed.append(guess)
-        if charactersString.contains(guess)==false{
-            if incorrectGuessList.contains(guess)==false{
-            incorrectGuesses += 1
-            incorrectGuessList.append(guess)
-        }
-        }
-        //alert if game lost
-        if incorrectGuesses >= 6{
-            let alert = UIAlertView(title: "Game Over", message:"Try again...", delegate: nil, cancelButtonTitle: "Cancel")
-            
-            alert.show()
-        }
-        var incorrectString = incorrectGuessList.joined(separator: ",")
-        incorrect.text = incorrectString
-    }
     
     
     //the dashes line
@@ -94,6 +74,30 @@ class HangmanViewController: UIViewController {
         dashes.text = dashesString
         return dashesString
     }
+    
+    //updates incorrect guess list and count, check if 6 incorrect reached
+    func trackIncorrect(){
+        guess = String(describing: self.input.text!)
+        guess = guess.uppercased()
+        lettersGuessed.append(guess)
+        if charactersString.contains(guess)==false{
+            if incorrectGuessList.contains(guess)==false{
+                incorrectGuesses += 1
+                incorrectGuessList.append(guess)
+            }
+        }
+        //alert if game lost
+        if incorrectGuesses >= 6{
+            lettersGuessed = charactersString
+            dashesDisplay()
+            let alert = UIAlertView(title: "Game Over", message:"Try again...", delegate: nil, cancelButtonTitle: "Cancel")
+            
+            alert.show()
+        }
+        var incorrectString = incorrectGuessList.joined(separator: ",")
+        incorrect.text = incorrectString
+    }
+
     
     //change image based on number wrong
     func imageDisplayFunc(){
@@ -134,11 +138,12 @@ class HangmanViewController: UIViewController {
                     return
                 }
             }//alert if game won
+                if incorrectGuesses < 6{
                     let alert1 = UIAlertView(title: "You Won!", message:"Play Again!", delegate: nil, cancelButtonTitle: "Cancel")
                 
                 alert1.show()
                 return
-            
+                }
         }
     }
 //Start Over button pressed, reset values
